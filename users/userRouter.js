@@ -24,7 +24,20 @@ router.post('/', validateUser, (req, res) => {
 
 //adding a post to a specific user
 router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
-    
+    req.body.user_id = req.user.id;
+    console.log(req.body.user_id);
+    Posts.insert(req.body)
+        .then(post => {
+            console.log(post);
+            res.status(200).json({
+                message: 'Post successfully created.'
+            })
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: 'Database error. Post was unable to be created.'
+            })
+        })
 });
 
 //get all of the users == WORKING
@@ -153,7 +166,6 @@ function validatePost(req, res, next) {
             message: 'Missing post data in req.body'
         });
      }
-
 };
 
 module.exports = router;
