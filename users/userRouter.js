@@ -5,7 +5,7 @@ const Posts = require('../posts/postDb');
 
 const router = express.Router();
 
-//adding a user
+//adding a user == WORKING
 router.post('/', validateUser, (req, res) => {
     Users.insert(req.body)
         .then(user => {
@@ -27,7 +27,7 @@ router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
     
 });
 
-//get all of the users
+//get all of the users == WORKING
 router.get('/', (req, res) => {
     Users.get()
         .then(users => {
@@ -40,12 +40,12 @@ router.get('/', (req, res) => {
         })
 });
 
-//get a specific user
+//get a specific user == WORKING
 router.get('/:id', validateUserId, (req, res) => {
     res.status(200).json(req.user);
 });
 
-//get posts for a specific user
+//get posts for a specific user == WORKING
 router.get('/:id/posts', validateUserId, (req, res) => {
     Users.getUserPosts(req.user.id)
         .then(posts => {
@@ -60,18 +60,43 @@ router.get('/:id/posts', validateUserId, (req, res) => {
 });
 
 
-//delete a specific user
-router.delete('/:id', (req, res) => {
-
+//delete a specific user == WORKING
+router.delete('/:id', validateUserId, (req, res) => {
+    Users.remove(req.params.id)
+        .then(user => {
+            console.log(user);
+            console.log(req.user);
+            res.status(200).json({
+                message: `${user} User deleted.`
+            });
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: 'Database error. User was unable to be deleted.'
+            });
+    })
 });
 
-//update a specific user
-router.put('/:id', (req, res) => {
+//update a specific user == WORKING
+router.put('/:id', validateUserId, validateUser, (req, res) => {
+    Users.update(req.params.id, req.body)
+    .then(user => {
+        console.log(user);
+        res.status(200).json({
+            message: `${req.body.name} was successfully updated.`
+        })
+    })
+    .catch(error => {
+        res.status(500).json({
+            message: 'Database error. User was unable to be updated.'
+        })
+    })
 
 });
 
 //custom middleware
 
+//WORKING ==
 function validateUserId(req, res, next) {
     if (req.params.id) {
         Users.getById(req.params.id)
@@ -94,6 +119,7 @@ function validateUserId(req, res, next) {
     } 
 };
 
+//WORKING ==
 function validateUser(req, res, next) {
     if (req.body) {
         if (req.body.name) {
@@ -110,6 +136,7 @@ function validateUser(req, res, next) {
     }
 };
 
+//WORKING ==
 function validatePost(req, res, next) {
     if (req.body) {
         if (req.body.text) {
