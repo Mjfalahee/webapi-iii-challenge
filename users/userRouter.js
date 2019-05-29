@@ -22,7 +22,7 @@ router.post('/', validateUser, (req, res) => {
         })
     });
 
-//adding a post to a specific user
+//adding a post to a specific user == WORKING
 router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
     req.body.user_id = req.user.id;
     console.log(req.body.user_id);

@@ -36,7 +36,7 @@ router.delete('/:id', validatePostId, (req, res) => {
 });
 
 
-//Update a specific Post == 
+//Update a specific Post == WORKING
 router.put('/:id', validatePostId, validatePost, (req, res) => {
     Posts.update(req.params.id, req.body)
         .then(post => {
@@ -84,6 +84,7 @@ function validatePostId(req, res, next) {
     }
 };
 
+//Make sure a post to add has text == WORKING
 function validatePost(req, res, next) {
     if (req.body) {
         if (req.body.text) {
